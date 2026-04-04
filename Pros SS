@@ -1,32 +1,63 @@
--- [[ PROS JS SS - ULTIMATE CHAOS EDITION 2026 ]] --
--- Fitur: 300+ Menu (Scrollable), Auto-Scan, Server-Side Simulation
+-- [[ PROS JS SS - THE FINAL OMEGA VERSION 2026 ]] --
+-- Fitur: 300+ Menu, Sky/Decal/Hint Buttons, Hoangtt Vibe, Draggable Toggle, SS Simulator
 
-local function CreateProsJS_Ultimate()
-    if game.CoreGui:FindFirstChild("ProsJSSS_Ultimate") then
-        game.CoreGui.ProsJSSS_Ultimate:Destroy()
+local function CreateProsJS_OMEGA()
+    -- [[ DESTRUCTION OF OLD GUIS ]] --
+    if game.CoreGui:FindFirstChild("ProsJSSS_Omega") then
+        game.CoreGui.ProsJSSS_Omega:Destroy()
+    end
+    if game.CoreGui:FindFirstChild("ProsSS_Toggle_Omega") then
+        game.CoreGui.ProsSS_Toggle_Omega:Destroy()
     end
 
+    -- [[ THE OMEGA SCREEN GUI ]] --
     local ScreenGui = Instance.new("ScreenGui")
-    local MainFrame = Instance.new("Frame")
-    local Header = Instance.new("TextLabel")
-    local CloseBtn = Instance.new("TextButton")
-    local TopBtns = Instance.new("Frame")
-    local EditorFrame = Instance.new("ScrollingFrame")
-    local Editor = Instance.new("TextBox")
-    
-    -- Panel Fitur Baru (Sebelah Kanan)
-    local FeaturePanel = Instance.new("ScrollingFrame")
-    local UIList = Instance.new("UIListLayout")
-
-    -- UI Settings (Ungu Neon Gelap)
-    local MainColor = Color3.fromRGB(10, 0, 10) 
-    local AccentColor = Color3.fromRGB(150, 0, 200) 
-    local TextColor = Color3.fromRGB(230, 50, 255) 
-
-    ScreenGui.Name = "ProsJSSS_Ultimate"
+    ScreenGui.Name = "ProsJSSS_Omega"
     ScreenGui.Parent = game.CoreGui
+    ScreenGui.ResetOnSpawn = false
 
-    -- Frame Utama (Dibikin makin lebar buat nampung menu 300+)
+    -- UI Settings (Ungu Neon Gelap khas Hoangtt & c00lkidd)
+    local MainColor = Color3.fromRGB(10, 0, 10)
+    local AccentColor = Color3.fromRGB(150, 0, 200)
+    local TextColor = Color3.fromRGB(230, 50, 255)
+
+    -- [[ 1. THE DRAGGABLE TOGGLE BUTTON ]] --
+    -- Pengganti kucing Hoang VN, dengan tulisan "Pros SS"
+    local ToggleGui = Instance.new("ScreenGui", game.CoreGui)
+    ToggleGui.Name = "ProsSS_Toggle_Omega"
+
+    local ToggleBtn = Instance.new("ImageButton")
+    ToggleBtn.Name = "ProsSS_Launcher"
+    ToggleBtn.Parent = ToggleGui
+    ToggleBtn.BackgroundColor3 = MainColor
+    ToggleBtn.BorderSizePixel = 2
+    ToggleBtn.BorderColor3 = AccentColor
+    ToggleBtn.Position = UDim2.new(0, 50, 0, 100) -- Posisi awal agak ke bawah
+    ToggleBtn.Size = UDim2.new(0, 70, 0, 70) -- Gede & Bulat
+    ToggleBtn.Image = "rbxassetid://8408806737" -- Logo Petir c00lkidd
+    ToggleBtn.ClipsDescendants = true
+    
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(1, 0)
+    UICorner.Parent = ToggleBtn
+
+    local ToggleLabel = Instance.new("TextLabel")
+    ToggleLabel.Parent = ToggleBtn
+    ToggleLabel.BackgroundTransparency = 1
+    ToggleLabel.Size = UDim2.new(1, 0, 1, 0)
+    ToggleLabel.Text = "Pros SS"
+    ToggleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleLabel.TextStrokeTransparency = 0
+    ToggleLabel.TextSize = 15
+    ToggleLabel.Font = Enum.Font.Code
+    ToggleLabel.TextYAlignment = Enum.TextYAlignment.Bottom
+
+    -- Bikin Draggable
+    ToggleBtn.Active = true
+    ToggleBtn.Draggable = true
+
+    -- [[ 2. THE MAIN OMEGA FRAME (THE BEAST) ]] --
+    local MainFrame = Instance.new("Frame")
     MainFrame.Name = "Main"
     MainFrame.Parent = ScreenGui
     MainFrame.BackgroundColor3 = MainColor
@@ -34,137 +65,166 @@ local function CreateProsJS_Ultimate()
     MainFrame.BorderSizePixel = 4
     MainFrame.Position = UDim2.new(0.5, -450, 0.5, -225)
     MainFrame.Size = UDim2.new(0, 900, 0, 450)
-    MainFrame.Active = true
-    MainFrame.Draggable = true
+    MainFrame.Visible = true -- Langsung muncul pas execute
 
     -- Header Title
-    Header.Parent = MainFrame
+    local Header = Instance.new("TextLabel", MainFrame)
+    Header.Size = UDim2.new(0, 350, 0, 35)
     Header.BackgroundColor3 = MainColor
-    Header.Size = UDim2.new(0, 400, 0, 35)
-    Header.Font = Enum.Font.Code
-    Header.Text = " [ PROS JS SS - THE SERVER DESTROYER ] "
+    Header.BorderSizePixel = 0
+    Header.Text = " [ PROS JS SS - OMEGA SERVER DESTROYER ] "
     Header.TextColor3 = TextColor
-    Header.TextSize = 20
-    Header.TextXAlignment = Enum.TextXAlignment.Left
+    Header.TextSize = 19
+    Header.Font = Enum.Font.Code
+    Header.TextXAlignment = "Left"
 
-    -- Top Button Bar (Sky, Decal, Hint, Shutdown, Console)
-    TopBtns.Parent = MainFrame
+    -- [[ 3. TOP ACTION BUTTONS (SKY/DECAL/HINT/SHUTDOWN/CONSOLE) ]] --
+    local TopBtns = Instance.new("Frame", MainFrame)
+    TopBtns.Name = "TopButtons"
     TopBtns.BackgroundColor3 = MainColor
-    TopBtns.Position = UDim2.new(1, -500, 0, 5)
-    TopBtns.Size = UDim2.new(0, 500, 0, 30)
+    TopBtns.BorderSizePixel = 0
+    TopBtns.Position = UDim2.new(1, -550, 0, 2)
+    TopBtns.Size = UDim2.new(0, 550, 0, 30)
 
-    local function createTopBtn(text, pos, width, func)
+    local function createTopBtn(name, text, pos, width)
         local btn = Instance.new("TextButton", TopBtns)
+        btn.Name = name
         btn.BackgroundColor3 = Color3.fromRGB(30, 0, 40)
         btn.BorderColor3 = AccentColor
-        btn.Size = UDim2.new(0, width, 0, 25)
+        btn.BorderSizePixel = 1
+        btn.Size = UDim2.new(0, width or 70, 0, 25)
         btn.Position = pos
         btn.Font = Enum.Font.Code
         btn.Text = text
         btn.TextColor3 = TextColor
         btn.TextSize = 13
-        btn.MouseButton1Click:Connect(func)
         return btn
     end
 
-    -- Mini Actions
-    createTopBtn("skybox", UDim2.new(0, 0, 0, 0), 65, function()
-        local s = Instance.new("Sky", game.Lighting)
-        s.SkyboxBk = "rbxassetid://8408806737" s.SkyboxDn = "rbxassetid://8408806737"
-        s.SkyboxFt = "rbxassetid://8408806737" s.SkyboxLf = "rbxassetid://8408806737"
-        s.SkyboxRt = "rbxassetid://8408806737" s.SkyboxUp = "rbxassetid://8408806737"
-    end)
-    createTopBtn("shutdown", UDim2.new(0, 70, 0, 0), 100, function() print("Attempting Shutdown...") end)
-    createTopBtn("hint", UDim2.new(0, 175, 0, 0), 50, function()
-        local h = Instance.new("Hint", workspace)
-        h.Text = "Pros SS Has Joined! Say Goodbye!"
-        task.wait(4) h:Destroy()
-    end)
+    -- Tombol Baru & Bawaan
+    local SkyBtn = createTopBtn("SkyBtn", "skybox", UDim2.new(0, 0, 0, 2), 65)
+    local DecalBtn = createTopBtn("DecalBtn", "decal", UDim2.new(0, 70, 0, 2), 65)
+    local HintBtnTop = createTopBtn("HintBtnTop", "hint", UDim2.new(0, 140, 0, 2), 55)
+    local ShutdownBtn = createTopBtn("Shutdown", "shutdown server", UDim2.new(0, 200, 0, 2), 120)
+    local ConsoleBtn = createTopBtn("Console", "console", UDim2.new(0, 325, 0, 2), 60)
 
-    -- Editor Area (Kiri)
-    EditorFrame.Parent = MainFrame
-    EditorFrame.BackgroundColor3 = Color3.fromRGB(5, 0, 5)
+    -- Close Button (X)
+    local CloseBtn = Instance.new("TextButton", TopBtns)
+    CloseBtn.Name = "Close"
+    CloseBtn.BackgroundColor3 = MainColor
+    CloseBtn.BorderSizePixel = 0
+    CloseBtn.Size = UDim2.new(0, 25, 0, 25)
+    CloseBtn.Position = UDim2.new(1, -30, 0, 2)
+    CloseBtn.Font = Enum.Font.SourceSansBold
+    CloseBtn.Text = "X"
+    CloseBtn.TextColor3 = Color3.fromRGB(200, 0, 0)
+    CloseBtn.TextSize = 20
+
+    -- [[ 4. EDITOR AREA (KIRI) ]] --
+    local EditorFrame = Instance.new("ScrollingFrame", MainFrame)
     EditorFrame.Position = UDim2.new(0, 10, 0, 45)
     EditorFrame.Size = UDim2.new(0, 580, 0, 340)
+    EditorFrame.BackgroundColor3 = Color3.fromRGB(5, 0, 5)
 
-    Editor.Parent = EditorFrame
+    local Editor = Instance.new("TextBox", EditorFrame)
     Editor.Size = UDim2.new(1, 0, 1, 0)
-    Editor.BackgroundColor3 = Color3.fromRGB(5, 0, 5)
+    Editor.Text = "-- Pros SS OMEGA V1\nrequire(8408806737).load('ProsJS')"
+    Editor.TextColor3 = Color3.fromRGB(200, 200, 200)
     Editor.Font = Enum.Font.Code
-    Editor.Text = "-- PROS JS SS READY\nrequire(8408806737).load('ProsJS')\n-- Paste your malicious code here..."
-    Editor.TextColor3 = Color3.fromRGB(180, 180, 180)
     Editor.TextSize = 14
     Editor.MultiLine = true
     Editor.TextXAlignment = "Left"
     Editor.TextYAlignment = "Top"
+    Editor.ClearTextOnFocus = false
 
-    -- PANEL 300+ FITUR (Kanan)
-    FeaturePanel.Parent = MainFrame
-    FeaturePanel.BackgroundColor3 = Color3.fromRGB(20, 0, 25)
-    FeaturePanel.BorderColor3 = AccentColor
+    -- [[ 5. THE 300+ FEATURES PANEL (KANAN) ]] --
+    local FeaturePanel = Instance.new("ScrollingFrame", MainFrame)
     FeaturePanel.Position = UDim2.new(0, 600, 0, 45)
     FeaturePanel.Size = UDim2.new(0, 290, 0, 395)
-    FeaturePanel.CanvasSize = UDim2.new(0, 0, 10, 0) -- Panjang banget biar muat 300+
+    FeaturePanel.BackgroundColor3 = Color3.fromRGB(20, 0, 25)
+    FeaturePanel.CanvasSize = UDim2.new(0, 0, 14, 0) -- Panjang banget biar muat 300+
 
-    UIList.Parent = FeaturePanel
-    UIList.Padding = BoxExtend.new(0, 5)
-    UIList.SortOrder = Enum.SortOrder.LayoutOrder
+    local UIList = Instance.new("UIListLayout", FeaturePanel)
+    UIList.Padding = UDim.new(0, 5)
 
-    local function addFeature(name, func)
+    -- Fungsi Tambah Fitur
+    local function addFeature(name)
         local btn = Instance.new("TextButton", FeaturePanel)
         btn.BackgroundColor3 = Color3.fromRGB(40, 0, 50)
         btn.Size = UDim2.new(1, -10, 0, 30)
-        btn.Font = Enum.Font.Code
         btn.Text = " > " .. name
         btn.TextColor3 = TextColor
-        btn.TextSize = 14
-        btn.MouseButton1Click:Connect(func)
+        btn.Font = Enum.Font.Code
     end
 
-    -- ISI 300+ FITUR (Contoh Utama, Sisanya Auto-Generated)
-    addFeature("KILL ALL PLAYERS (SS)", function() warn("Scanning for Kill Remote...") end)
-    addFeature("SERVER CRASHER V3", function() warn("Sending Lag Packets...") end)
-    addFeature("SPAM C00LKIDD DECAL", function() warn("Injecting Decals...") end)
-    addFeature("BAN ALL (ADMIN ONLY)", function() warn("Access Denied: Need SS Backdoor") end)
-    addFeature("RAINBOW EVERYTHING", function() warn("Applying Rainbow Shader...") end)
-    addFeature("GIVE ALL BADGES", function() warn("Badge Remote not found.") end)
-    addFeature("NUKE MAP", function() warn("Destroying Workspace...") end)
-    addFeature("KIDNAP PLAYER (FE)", function() warn("Select Player to Fling!") end)
+    -- Contoh Fitur Utama
+    addFeature("SERVER DESTROYER V1")
+    addFeature("C00LKIDD SKY (SS)")
+    addFeature("SHUTDOWN SERVER")
+    addFeature("KILL ALL PLAYERS (SS)")
+    addFeature("SPAM C00LKIDD DECAL")
+    addFeature("NUKE MAP")
+    addFeature("FLING ALL (FE)")
+    addFeature("GIVE ADMIN (SS-LOCKED)")
 
-    -- Auto-generate placeholders biar keliatan OP parah (Total 300+)
-    for i = 1, 292 do
-        addFeature("Command_0" .. i .. " [SS-LOCKED]", function() warn("Backdoor Needed for this command!") end)
-    end
+    -- Auto-generate placeholders (Total 300+)
+    for i = 1, 302 do addFeature("Pros_Command_" .. i .. " [SS-LOCKED]") end
 
-    -- Bottom Buttons
-    local function createBtmBtn(text, pos)
-        local btn = Instance.new("TextButton", MainFrame)
+    -- [[ 6. BOTTOM BUTTONS (HOANGTT STYLE) ]] --
+    local BottomBtns = Instance.new("Frame", MainFrame)
+    BottomBtns.Name = "BottomButtons"
+    BottomBtns.BackgroundColor3 = MainColor
+    BottomBtns.BorderSizePixel = 0
+    BottomBtns.Position = UDim2.new(0, 10, 0, 400)
+    BottomBtns.Size = UDim2.new(0, 580, 0, 35)
+
+    local function createBtmBtn(name, text, pos)
+        local btn = Instance.new("TextButton", BottomBtns)
+        btn.Name = name
         btn.BackgroundColor3 = Color3.fromRGB(25, 0, 35)
         btn.BorderColor3 = AccentColor
+        btn.BorderSizePixel = 1
         btn.Size = UDim2.new(0, 110, 0, 35)
         btn.Position = pos
         btn.Font = Enum.Font.Code
         btn.Text = text
         btn.TextColor3 = TextColor
-        btn.TextSize = 15
+        btn.TextSize = 16
         return btn
     end
 
-    createBtmBtn("Execute", UDim2.new(0, 10, 0, 400))
-    createBtmBtn("Clear", UDim2.new(0, 130, 0, 400))
-    createBtmBtn("Scan SS", UDim2.new(0, 250, 0, 400))
-    createBtmBtn("FE Bypass", UDim2.new(0, 370, 0, 400))
-    createBtmBtn("Kill all", UDim2.new(0, 490, 0, 400))
+    createBtmBtn("Execute", UDim2.new(0, 0, 0, 0))
+    createBtmBtn("Clear", UDim2.new(0, 120, 0, 0))
+    createBtmBtn("ScanSS", UDim2.new(0, 240, 0, 0))
+    createBtmBtn("FEBypass", UDim2.new(0, 360, 0, 0))
+    createBtmBtn("KillAll", UDim2.new(0, 480, 0, 0))
 
-    -- Close Logic
-    CloseBtn.Parent = MainFrame
-    CloseBtn.Position = UDim2.new(1, -30, 0, 5)
-    CloseBtn.Size = UDim2.new(0, 25, 0, 25)
-    CloseBtn.Text = "X"
-    CloseBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+    -- [[ LOGIC ]] --
+
+    -- 1. Toggle Button Logic
+    ToggleBtn.MouseButton1Click:Connect(function()
+        MainFrame.Visible = not MainFrame.Visible
+        print("Pros SS: Menu Toggled!")
+    end)
+
+    -- 2. Skybox Petir
+    SkyBtn.MouseButton1Click:Connect(function()
+        local s = Instance.new("Sky", game.Lighting)
+        s.SkyboxBk = "rbxassetid://8408806737" s.SkyboxDn = "rbxassetid://8408806737"
+        s.SkyboxFt = "rbxassetid://8408806737" s.SkyboxLf = "rbxassetid://8408806737"
+        s.SkyboxRt = "rbxassetid://8408806737" s.SkyboxUp = "rbxassetid://8408806737"
+    end)
+
+    -- 3. Hint
+    HintBtnTop.MouseButton1Click:Connect(function()
+        local h = Instance.new("Hint", workspace)
+        h.Text = "Pros SS Has Joined! Say Goodbye!"
+        task.wait(4) h:Destroy()
+    end)
+
     CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 
-    print("PROS JS SS: ULTIMATE CHAOS EDITION LOADED! 310 Features Detected.")
+    print("Pros JS SS OMEGA Version Loaded! 310 Features Ready.")
 end
 
-CreateProsJS_Ultimate()
+CreateProsJS_OMEGA()
