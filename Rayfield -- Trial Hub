@@ -1,0 +1,211 @@
+-- [[ TRIAL HUB: SYSTEM NOT BROKEN ]] --
+-- Murni Custom UI (No Library)
+
+local Players = game:GetService("Players")
+local LP = Players.LocalPlayer
+local RS = game:GetService("RunService")
+local TS = game:GetService("TweenService")
+local CoreGui = game:GetService("CoreGui")
+
+-- 1. FULL SCREEN LOADING SCREEN
+local LoadingScreen = Instance.new("ScreenGui")
+local MainLoading = Instance.new("Frame")
+local WelcomeText = Instance.new("TextLabel")
+
+LoadingScreen.Name = "TrialHubLoading"
+LoadingScreen.Parent = CoreGui
+LoadingScreen.IgnoreGuiInset = true
+
+MainLoading.Name = "MainLoading"
+MainLoading.Parent = LoadingScreen
+MainLoading.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+MainLoading.Size = UDim2.new(1, 0, 1, 0)
+
+WelcomeText.Parent = MainLoading
+WelcomeText.BackgroundTransparency = 1
+WelcomeText.Position = UDim2.new(0.5, 0, 0.5, 0)
+WelcomeText.AnchorPoint = Vector2.new(0.5, 0.5)
+WelcomeText.Size = UDim2.new(0, 400, 0, 50)
+WelcomeText.Font = Enum.Font.GothamBold
+WelcomeText.Text = "Welcome To System Not Broken! \n Thank for using the script😉"
+WelcomeText.TextColor3 = Color3.fromRGB(255, 255, 255)
+WelcomeText.TextSize = 25
+WelcomeText.TextTransparency = 1
+
+-- Animasi Loading
+task.spawn(function()
+    TS:Create(WelcomeText, TweenInfo.new(1), {TextTransparency = 0}):Play()
+    task.wait(3)
+    TS:Create(WelcomeText, TweenInfo.new(1), {TextTransparency = 1}):Play()
+    TS:Create(MainLoading, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
+    task.wait(1)
+    LoadingScreen:Destroy()
+end)
+
+-- 2. MAIN GUI (CUSTOM SCRIPT)
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local CloseBtn = Instance.new("TextButton")
+local MinimizeBtn = Instance.new("TextButton")
+local ContentFrame = Instance.new("ScrollingFrame")
+local UIListLayout = Instance.new("UIListLayout")
+
+ScreenGui.Name = "TrialHub_Main"
+ScreenGui.Parent = CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MainFrame.BorderSizePixel = 2
+MainFrame.Position = UDim2.new(0.3, 0, 0.3, 0)
+MainFrame.Size = UDim2.new(0, 350, 0, 400) -- Gedein sesuai request
+MainFrame.Active = true
+MainFrame.Draggable = true -- Biar bisa digeser
+
+Title.Parent = MainFrame
+Title.Size = UDim2.new(1, -60, 0, 30)
+Title.BackgroundTransparency = 1
+Title.Text = "  Trial Hub | System Not Broken"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 14
+Title.TextXAlignment = Enum.TextXAlignment.Left
+
+MinimizeBtn.Parent = MainFrame
+MinimizeBtn.Position = UDim2.new(1, -55, 0, 5)
+MinimizeBtn.Size = UDim2.new(0, 20, 0, 20)
+MinimizeBtn.Text = "-"
+MinimizeBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+MinimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+CloseBtn.Parent = MainFrame
+CloseBtn.Position = UDim2.new(1, -30, 0, 5)
+CloseBtn.Size = UDim2.new(0, 20, 0, 20)
+CloseBtn.Text = "X"
+CloseBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+ContentFrame.Parent = MainFrame
+ContentFrame.Position = UDim2.new(0, 10, 0, 40)
+ContentFrame.Size = UDim2.new(1, -20, 1, -50)
+ContentFrame.BackgroundTransparency = 1
+ContentFrame.CanvasSize = UDim2.new(0, 0, 2, 0) -- Muat banyak fitur
+
+UIListLayout.Parent = ContentFrame
+UIListLayout.Padding = UDim.new(0, 5)
+
+-- FUNCTION: CREATE BUTTON
+local function CreateButton(name, callback)
+    local btn = Instance.new("TextButton")
+    btn.Name = name
+    btn.Parent = ContentFrame
+    btn.Size = UDim2.new(1, 0, 0, 35)
+    btn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    btn.TextColor3 = Color3.fromRGB(0, 0, 0)
+    btn.Font = Enum.Font.GothamBold
+    btn.Text = name
+    btn.TextSize = 14
+    
+    local UICorner = Instance.new("UICorner", btn)
+    UICorner.CornerRadius = UDim.new(0, 6)
+
+    btn.MouseButton1Click:Connect(callback)
+end
+
+-- 3. FITUR-FITUR (10+)
+-- Fitur Combat
+CreateButton("KILL ALL", function()
+    for _, v in pairs(Players:GetPlayers()) do
+        if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+            LP.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+            -- Tambahkan logika weapon lu di sini
+        end
+    end
+end)
+
+CreateButton("KILL NEAREST", function()
+    local target = nil
+    local dist = math.huge
+    for _, v in pairs(Players:GetPlayers()) do
+        if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+            local d = (LP.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).Magnitude
+            if d < dist then
+                dist = d
+                target = v
+            end
+        end
+    end
+    if target then LP.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame end
+end)
+
+-- Fitur World
+CreateButton("PURGE MAP (BASEPLATE)", function()
+    local b = Instance.new("Part", workspace)
+    b.Size, b.CFrame, b.Anchored, b.Name = Vector3.new(1000, 1, 1000), CFrame.new(0, -2, 0), true, "Base"
+    for _, v in pairs(workspace:GetChildren()) do
+        if v.Name ~= "Base" and not Players:GetPlayerFromCharacter(v) then v:Destroy() end
+    end
+end)
+
+-- Fitur Game Specific
+CreateButton("TOWER: INSTANT WIN", function()
+    local p = workspace:FindFirstChild("Finish") or workspace:FindFirstChild("top")
+    if p then LP.Character.HumanoidRootPart.CFrame = p.CFrame end
+end)
+
+CreateButton("MEEPCITY: COIN FARM", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/StayExploiting/Scripts/main/MeepCity.lua"))()
+end)
+
+-- Fitur Universal
+CreateButton("UNIVERSAL AIMBOT", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Exunys/Aimbot-V2/main/Resources/Scripts/Main.lua"))()
+end)
+
+CreateButton("UNIVERSAL ESP", function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/Scripts/ESP.lua'))()
+end)
+
+CreateButton("NOCLIP (TOGGLE)", function()
+    _G.noclip = not _G.noclip
+    RS.Stepped:Connect(function()
+        if _G.noclip then
+            for _, v in pairs(LP.Character:GetDescendants()) do
+                if v:IsA("BasePart") then v.CanCollide = false end
+            end
+        end
+    end)
+end)
+
+CreateButton("FLY V3", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.lua"))()
+end)
+
+CreateButton("INFINITE YIELD", function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+end)
+
+CreateButton("ANTI-KICK / AFK", function()
+    local vu = game:GetService("VirtualUser")
+    LP.Idled:Connect(function()
+        vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+        wait(1)
+        vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    end)
+end)
+
+-- 4. LOGIC BUTTONS (X & -)
+local minimized = false
+MinimizeBtn.MouseButton1Click:Connect(function()
+    minimized = not minimized
+    ContentFrame.Visible = not minimized
+    MainFrame:TweenSize(minimized and UDim2.new(0, 350, 0, 30) or UDim2.new(0, 350, 0, 400), "Out", "Quint", 0.3)
+end)
+
+CloseBtn.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+print("Trial Hub Loaded - System Not Broken")
